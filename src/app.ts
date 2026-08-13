@@ -1,7 +1,7 @@
 import express from 'express'
 
 import { healthRouter } from '@/health/health.route.js';
-import { requestIdMiddleware } from '@/request.id.middleware.js';
+import { requestIdMiddleware } from '@/request-id.middleware.js';
 
 const app: express.Application = express();
 app.use(express.json({
