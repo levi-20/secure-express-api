@@ -18,7 +18,8 @@
       "paths": {
         "@/*": [
           "./src/modules/*",
-          "./src/utils/*"
+          "./src/utils/*",
+          "./src/middlewares/*"
         ]
       }
   },
