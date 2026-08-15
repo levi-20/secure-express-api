@@ -1,0 +1,39 @@
+name: express-apis
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - express_api_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --dbname=expressdb --username express_admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: express_admin
+      POSTGRES_PASSWORD: express_admin
+      POSTGRES_DB: expressdb
+
+  express-api:
+    container_name: express-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  express_api_data:
