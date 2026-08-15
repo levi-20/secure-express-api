@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2024",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "target": "es2025",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "rootDir": "src",
     "outDir": "dist",
     "strict": true,
@@ -19,8 +19,10 @@
         "@/*": [
           "./src/modules/*",
           "./src/utils/*",
-          "./src/middlewares/*"
-        ]
+          "./src/middlewares/*",
+          "./src/config/*",
+          "./src/shared/*"
+        ],
       }
   },
   "include": [
