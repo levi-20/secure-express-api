@@ -18,9 +18,9 @@ app.use(requestIdMiddleware);
 app.use('/health', healthRouter);
 
 // For 404 routes
-app.use(notFoundMiddleware)
+app.use(notFoundMiddleware);
 
 // Error hander
-app.use(errorHandlerMiddleware)
+app.use(errorHandlerMiddleware);
 
-export default app
+export default app;

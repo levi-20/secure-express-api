@@ -18,6 +18,20 @@ services:
       POSTGRES_PASSWORD: express_admin
       POSTGRES_DB: expressdb
 
+  db-migrations:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    
+    command: pnpm db:migrate
+
+    env_file:
+      - .env
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   express-api:
     container_name: express-api
     build:
@@ -29,8 +43,8 @@ services:
     ports:
       - "${PORT}:${PORT}"
     depends_on:
-      postgres:
-        condition: service_healthy
+      db-migrations:
+        condition: service_completed_successfully
     volumes:
       - .:/app
       - /app/node_modules

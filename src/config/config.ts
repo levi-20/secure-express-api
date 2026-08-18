@@ -1,18 +1,29 @@
-import { env } from "./env.js"
+import env from "./env.js"
 
-type Environment = "dev" | "test" | "production"
+export type Environment =
+  | "development"
+  | "test"
+  | "production";
 
-type AppConfig =  {
+type AppConfig = {
   environment: Environment
   server: {
     port: number,
+  },
+  database: {
+    url: string
   }
 }
 
 
-export const config: AppConfig = {
-  environment: env.NODE_ENV,
+const config: AppConfig = {
+  environment: env.NODE_ENV as Environment,
   server: {
     port: env.PORT,
+  },
+  database: {
+    url: `postgres://${env.POSTGRES_USER}:${env.POSTGRES_PASSWORD}@${env.POSTGRES_HOST}:5432/${env.POSTGRES_DB}?sslmode=disable`
   }
 }
+
+export default config;

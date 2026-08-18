@@ -15,22 +15,22 @@
     "sourceMap": true,
     "declaration": true,
     "skipLibCheck": true,
-      "paths": {
-        "@/*": [
-          "./src/modules/*",
-          "./src/utils/*",
-          "./src/middlewares/*",
-          "./src/config/*",
-          "./src/shared/*"
-        ],
-      }
+    "paths": {
+      "@/*": [
+        "./src/modules/*",
+        "./src/utils/*",
+        "./src/middlewares/*",
+        "./src/config/*",
+        "./src/shared/*"
+      ],
+    }
   },
   "include": [
     "src"
   ],
-
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "drizzle.config.ts"
   ]
 }
