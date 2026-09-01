@@ -6,6 +6,8 @@
     "rootDir": "src",
     "outDir": "dist",
     "strict": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./.tsbuildinfo",
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "noImplicitOverride": true,
@@ -21,7 +23,8 @@
         "./src/utils/*",
         "./src/middlewares/*",
         "./src/config/*",
-        "./src/shared/*"
+        "./src/shared/*",
+        "./src/types/*"
       ],
     }
   },

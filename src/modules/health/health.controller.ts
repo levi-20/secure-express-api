@@ -9,5 +9,3 @@ export const healthController = (_req: Request, res: Response) => {
       message: "Looking awesome"
     });
 }
-
-

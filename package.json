@@ -17,6 +17,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ajv": "^8.20.0",
+    "ajv-errors": "^3.0.0",
+    "argon2": "^0.45.1",
     "drizzle-orm": "^0.45.2",
     "express": "^5.2.1",
     "pg": "^8.23.0",
