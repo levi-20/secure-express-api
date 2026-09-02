@@ -13,19 +13,18 @@ export const errorHandlerMiddleware: ErrorRequestHandler = (
 
   if (err instanceof AppError) {
     res.status(err.statusCode).json({
-      
+
       success: false,
       requestId,
       error: {
         code: err.code,
         message: err.message,
+        ...(err.details === undefined ? {} : { details: err.details }),
       },
     });
 
     return
   }
-
-  console.error(err);
 
   res.status(500).json({
 

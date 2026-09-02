@@ -21,6 +21,7 @@ export const createUser = async ({ email, passwordHash }: any) => {
 
   const [user] = await db.insert(User)
     .values({ email, passwordHash })
+    .onConflictDoNothing({ target: User.email })
     .returning()
 
   return user

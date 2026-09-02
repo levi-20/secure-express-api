@@ -43,3 +43,26 @@ export const createUserSchema = {
   ],
   additionalProperties: false
 }
+
+export const loginUserSchema = {
+  type: 'object',
+  properties: {
+    email: {
+      type: 'string',
+      pattern: '^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$',
+      maxLength: 254
+    },
+    password: {
+      type: 'string',
+      // pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+      minLength: 1,
+      maxLength: 100,
+      errorMessage: "password length must be 3 or more."
+    }
+  },
+  required: [
+    'email',
+    'password'
+  ],
+  additionalProperties: false
+}

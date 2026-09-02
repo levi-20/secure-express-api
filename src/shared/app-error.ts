@@ -11,16 +11,19 @@ type HttpErrorStatusCode =
   | 503;
 
 type ErrorCode =
-  | "NOT_FOUND"
+  | "EMAIL_ALREADY_EXISTS"
   | "INTERNAL_SERVER_ERROR"
-  | "INVALID_REQUEST";
+  | "INVALID_CREDENTIALS"
+  | "INVALID_REQUEST"
+  | "NOT_FOUND";
 
-export class AppError extends Error{
+export class AppError extends Error {
 
   constructor(
     public readonly statusCode: HttpErrorStatusCode,
     public readonly code: ErrorCode,
-    message: string
+    message: string,
+    public readonly details?: unknown
   ) {
     super(message)
     this.name = "AppError"

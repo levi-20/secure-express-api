@@ -8,7 +8,8 @@ services:
     volumes:
       - express_api_data:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready --dbname=expressdb --username express_admin"]
+      test:
+        ["CMD-SHELL", "pg_isready --dbname=expressdb --username express_admin"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -22,12 +23,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    
+
     command: pnpm db:migrate
 
     env_file:
       - .env
-    
+
     depends_on:
       postgres:
         condition: service_healthy
