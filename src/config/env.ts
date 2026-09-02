@@ -18,7 +18,9 @@ const envSchema = z.object({
 
   POOL_CONNECTION_TIMEOUT: z.coerce.number().int().positive().default(5_000),
 
-  POOL_IDLE_TIMEOUT: z.coerce.number().int().positive().default(30_000)
+  POOL_IDLE_TIMEOUT: z.coerce.number().int().positive().default(30_000),
+
+  SESSION_TTL_DAYS: z.coerce.number().int().positive().max(365).default(7),
 });
 
 const env = envSchema.parse(process.env);

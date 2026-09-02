@@ -1,7 +1,9 @@
 import { eq } from "drizzle-orm";
 
-import { db } from "../../infra/db/client.js";
-import { User } from "../../infra/db/user.js";
+import { db } from "@/db/client.js";
+import { User } from "@/db/user.js";
+import { AuthSession } from "@/db/auth-sessions.js";
+import { UUID } from "node:crypto";
 
 
 
@@ -15,6 +17,15 @@ export const getUserByEmail = async (email: string) => {
   return user
 }
 
+export const getUserById = async (id: string) => {
+
+  const [user] = await db.select()
+    .from(User)
+    .where(eq(User.id, id))
+    .limit(1);
+
+  return user;
+}
 
 export const createUser = async ({ email, passwordHash }: any) => {
 

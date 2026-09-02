@@ -19,7 +19,7 @@ export const registerUser = async ({ email, password }: RegisterUserInput) => {
 
   const passwordHash = await argon2.hash(password, { type: argon2.argon2id })
 
-  const user = createUser({ email, passwordHash });
+  const user = await createUser({ email, passwordHash });
 
   if (!user) {
     throw new AppError(
@@ -39,7 +39,7 @@ export const autheticateUser = async ({ email, password }: LoginUserInput) => {
 
   if (!user) {
     throw new AppError(
-      409,
+      401,
       "INVALID_CREDENTIALS",
       "Invaid email or password"
     )
@@ -47,7 +47,7 @@ export const autheticateUser = async ({ email, password }: LoginUserInput) => {
 
   if (!await argon2.verify(user.passwordHash, password)) {
     throw new AppError(
-      409,
+      401,
       "INVALID_CREDENTIALS",
       "Invaid email or password"
     )

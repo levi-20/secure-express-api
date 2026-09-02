@@ -9,7 +9,7 @@ export const requestIdMiddleware = (
 ) => {
 
   const requestId = req.get('x-request-id') ?? randomUUID();
-  
+
   res.setHeader('X-Request-Id', requestId);
 
   next();

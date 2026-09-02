@@ -13,15 +13,15 @@ export const AuthSession = pgTable(
 
     tokenHash: varchar("token_hash", { length: 64 }).notNull().unique(),
 
-    expiresAt: timestamp("expires_at", { withTimezone: true, precision: 3 }),
+    expiresAt: timestamp("expires_at", { withTimezone: true, precision: 3 }).notNull(),
 
     revokedAt: timestamp("revoked_at", { withTimezone: true, precision: 3 }),
 
-    createdAt: timestamp("created_at", { withTimezone: true, precision: 3 }),
+    createdAt: timestamp("created_at", { withTimezone: true, precision: 3 }).notNull().defaultNow(),
 
   },
   (table) => [
-    
+
     index("auth_session_user_id_idx").on(table.userId),
 
     index("auth_sessions_expires_at_idx").on(table.expiresAt)

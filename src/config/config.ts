@@ -13,19 +13,22 @@ type AppConfig = {
   database: {
     url: string,
     pool: {
-      max: number;
-      idleTimeoutMillis: number;
-      connectionTimeoutMillis: number;
-    };
+      max: number,
+      idleTimeoutMillis: number,
+      connectionTimeoutMillis: number,
+    }
+  },
+  auth: {
+    sessionTTL: number,
   }
 }
 
 
 const config: AppConfig = {
-  environment: env.NODE_ENV as Environment,
-  server: {
-    port: env.PORT,
+  auth: {
+    sessionTTL: env.SESSION_TTL_DAYS * 24 * 60 * 60 * 1_000,
   },
+  environment: env.NODE_ENV as Environment,
   database: {
     url: `postgres://${env.POSTGRES_USER}:${env.POSTGRES_PASSWORD}@${env.POSTGRES_HOST}:5432/${env.POSTGRES_DB}?sslmode=disable`,
     pool: {
@@ -33,6 +36,9 @@ const config: AppConfig = {
       idleTimeoutMillis: env.POOL_IDLE_TIMEOUT,
       connectionTimeoutMillis: env.POOL_CONNECTION_TIMEOUT,
     },
+  },
+  server: {
+    port: env.PORT,
   },
 }
 

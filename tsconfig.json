@@ -24,7 +24,8 @@
         "./src/middlewares/*",
         "./src/config/*",
         "./src/shared/*",
-        "./src/types/*"
+        "./src/types/*",
+        "./src/infra/*"
       ],
     }
   },

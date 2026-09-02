@@ -1,4 +1,5 @@
 import express from 'express'
+import cookieParser from 'cookie-parser';
 
 import { healthRouter } from '@/health/health.route.js';
 import { requestIdMiddleware } from '@/request-id.middleware.js';
@@ -8,9 +9,8 @@ import { userRouter } from '@/user/user.route.js';
 
 const app: express.Application = express();
 
-app.use(express.json({
-  limit: '1mb'
-}));
+app.use(express.json({ limit: '1mb' }));
+app.use(cookieParser())
 
 // Middlewares
 app.use(requestIdMiddleware);

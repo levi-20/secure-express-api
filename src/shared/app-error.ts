@@ -15,7 +15,8 @@ type ErrorCode =
   | "INTERNAL_SERVER_ERROR"
   | "INVALID_CREDENTIALS"
   | "INVALID_REQUEST"
-  | "NOT_FOUND";
+  | "NOT_FOUND"
+  | "UNAUTHENTICATED";
 
 export class AppError extends Error {
 
