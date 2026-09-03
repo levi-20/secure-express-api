@@ -3,6 +3,7 @@ declare global {
     interface Request {
       auth?: {
         userId: string;
+        expiresAt: Date;
         sessionId: string;
       };
     }

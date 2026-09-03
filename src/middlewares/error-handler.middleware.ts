@@ -1,19 +1,13 @@
 import type { ErrorRequestHandler, Request, Response, NextFunction } from 'express'
-import { AppError } from '@/app-error.js'
+import { AppError, ErrorCode } from '@/app-error.js'
 
 
-export const errorHandlerMiddleware: ErrorRequestHandler = (
-  err,
-  _req: Request,
-  res: Response,
-  _next: NextFunction
-) => {
+export const errorHandlerMiddleware: ErrorRequestHandler = (err, _req: Request, res: Response, _next: NextFunction) => {
 
   const requestId = res.get("X-Request-Id");
 
   if (err instanceof AppError) {
     res.status(err.statusCode).json({
-
       success: false,
       requestId,
       error: {
@@ -27,13 +21,11 @@ export const errorHandlerMiddleware: ErrorRequestHandler = (
   }
 
   res.status(500).json({
-
     success: false,
     requestId,
     error: {
-      code: "INTERNAL_SERVER_ERROR",
+      code: ErrorCode.INTERNAL_SERVER_ERROR,
       message: "An unexpected error occurred",
     },
   });
-
 }

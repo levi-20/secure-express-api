@@ -20,6 +20,7 @@ type AppConfig = {
   },
   auth: {
     sessionTTL: number,
+    csrf: string
   }
 }
 
@@ -27,6 +28,7 @@ type AppConfig = {
 const config: AppConfig = {
   auth: {
     sessionTTL: env.SESSION_TTL_DAYS * 24 * 60 * 60 * 1_000,
+    csrf: env.CSRF_SECRET,
   },
   environment: env.NODE_ENV as Environment,
   database: {

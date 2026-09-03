@@ -1,44 +1,50 @@
-import { and, eq, gt, isNull } from "drizzle-orm";
-import { createHash, randomBytes } from "node:crypto"
-
+import { Buffer } from 'node:buffer'
+import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto"
 
 import config from "@/config.js";
-import { createSession, revokeSessionById } from "./session.repository.js";
-import { db } from "@/db/client.js";
-import { AuthSession } from "@/db/auth-sessions.js";
+import { AppError, ErrorCode } from '@/app-error.js';
+import { createSession, getActiveSessionByTokenHash, revokeSessionById } from "./session.repository.js";
 
 
-export const hashSessionToken = (token: string) => createHash("sha256").update(token).digest("hex");
+export const getHash = (token: string) => {
+
+  return createHash("sha256").update(token).digest("hex");
+}
 
 export const createUserSession = async (userId: string) => {
 
   const token = randomBytes(32).toString("base64url");
-
   const expiresAt = new Date(Date.now() + config.auth.sessionTTL);
+  const session = await createSession({ userId, tokenHash: getHash(token), expiresAt })
 
-  await createSession({
-    userId,
-    tokenHash: hashSessionToken(token),
-    expiresAt
-  })
+  if (!session) throw new AppError(500, ErrorCode.INTERNAL_SERVER_ERROR, "Unable to create session")
 
-  return { token, expiresAt }
+  return { sessionId: session.id, token, expiresAt }
+}
+
+export const createCsrfToken = (sessionId: string) => {
+
+  const random = randomBytes(32).toString("base64url");
+  const signature = createHmac("sha256", config.auth.csrf).update(`${sessionId}.${random}`).digest("base64url");
+
+  return `${signature}.${random}`;
 }
 
 export const findActiveSessionByToken = async (token: string) => {
 
-  const [session] = await db.select()
-    .from(AuthSession)
-    .where(
-      and(
-        eq(AuthSession.tokenHash, hashSessionToken(token)),
-        isNull(AuthSession.revokedAt),
-        gt(AuthSession.expiresAt, new Date())
-      ),
-    )
-    .limit(1);
+  return await getActiveSessionByTokenHash(getHash(token))
+}
 
-  return session
+export const verifyCsrfToken = (sessionId: string, csrfToken: string): boolean => {
+
+  const [signature, random] = csrfToken.split(".");
+  if (signature === undefined || random === undefined) return false
+
+  const expectedSignature = createHmac("sha256", config.auth.csrf).update(`${sessionId}.${random}`).digest("base64url");
+  const expected = Buffer.from(expectedSignature)
+  const orignal = Buffer.from(signature)
+
+  return signature?.length === expectedSignature.length && timingSafeEqual(expected, orignal)
 }
 
 export const logoutSession = async (sessionId: string) => {

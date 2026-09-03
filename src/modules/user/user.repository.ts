@@ -2,8 +2,6 @@ import { eq } from "drizzle-orm";
 
 import { db } from "@/db/client.js";
 import { User } from "@/db/user.js";
-import { AuthSession } from "@/db/auth-sessions.js";
-import { UUID } from "node:crypto";
 
 
 
@@ -28,7 +26,6 @@ export const getUserById = async (id: string) => {
 }
 
 export const createUser = async ({ email, passwordHash }: any) => {
-
 
   const [user] = await db.insert(User)
     .values({ email, passwordHash })

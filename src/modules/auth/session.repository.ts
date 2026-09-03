@@ -1,16 +1,34 @@
+import { and, eq, gt, isNotNull, isNull } from "drizzle-orm";
+
 import { db } from '@/db/client.js'
 import { AuthSession } from '@/db/auth-sessions.js'
-import { and, eq, isNotNull } from 'drizzle-orm';
 
 
 type CreateSessionInput = Pick<typeof AuthSession.$inferInsert, "userId" | "tokenHash" | "expiresAt">
 
 export const createSession = async (input: CreateSessionInput) => {
-  const [sessions] = await db.insert(AuthSession)
-    .values(input)
-    .returning();
 
-  return sessions
+  const [session] = await db.insert(AuthSession)
+    .values(input)
+    .returning({ id: AuthSession.id });
+
+  return session
+}
+
+export const getActiveSessionByTokenHash = async (tokenHash: string) => {
+
+  const [session] = await db.select()
+    .from(AuthSession)
+    .where(
+      and(
+        eq(AuthSession.tokenHash, tokenHash),
+        isNull(AuthSession.revokedAt),
+        gt(AuthSession.expiresAt, new Date())
+      ),
+    )
+    .limit(1);
+
+  return session
 }
 
 export const revokeSessionById = async (sessionId: string) => {

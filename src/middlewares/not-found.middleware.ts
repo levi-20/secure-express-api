@@ -1,3 +1,4 @@
+import { ErrorCode } from '@/app-error.js';
 import type { Request, Response } from 'express'
 
 
@@ -9,7 +10,7 @@ export const notFoundMiddleware = (
   res.status(404).json({
     success: false,
     error: {
-      code: "RESOURCE_NOT_FOUND",
+      code: ErrorCode.RESOURCE_NOT_FOUND,
       message: "The requested route was not found",
     },
   });

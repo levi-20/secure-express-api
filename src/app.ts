@@ -17,7 +17,7 @@ app.use(requestIdMiddleware);
 
 // Routes
 app.use('/health', healthRouter);
-app.use('/users', userRouter)
+app.use(userRouter)
 
 // For 404 routes
 app.use(notFoundMiddleware);

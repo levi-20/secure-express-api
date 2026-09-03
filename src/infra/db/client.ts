@@ -11,7 +11,6 @@ const pool = new Pool({
   connectionTimeoutMillis: config.database.pool.connectionTimeoutMillis
 });
 
-
 export const db = drizzle(pool);
 
 export { pool };

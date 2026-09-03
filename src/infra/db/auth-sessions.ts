@@ -4,8 +4,7 @@ import { User } from "./user.js";
 import { sql } from "drizzle-orm";
 
 export const AuthSession = pgTable(
-
-  "auth_sessions",
+  "auth_sessions", // table name
   {
     id: uuid("id").default(sql`uuidv7()`).primaryKey(),
 
@@ -21,7 +20,6 @@ export const AuthSession = pgTable(
 
   },
   (table) => [
-
     index("auth_session_user_id_idx").on(table.userId),
 
     index("auth_sessions_expires_at_idx").on(table.expiresAt)
