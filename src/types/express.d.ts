@@ -4,7 +4,7 @@ declare global {
       auth?: {
         userId: string;
         expiresAt: Date;
-        sessionId: string;
+        sessionId?: string;
       };
     }
   }

@@ -22,7 +22,12 @@ const envSchema = z.object({
 
   SESSION_TTL_DAYS: z.coerce.number().int().positive().max(365).default(7),
 
-  CSRF_SECRET: z.coerce.string().length(86)
+  CSRF_SECRET: z.coerce.string().length(86),
+
+  JWT_TTL_MINUTES: z.coerce.number().int().positive().max(60).default(5),
+
+  JWT_SECRET: z.coerce.string().length(128),
+  
 });
 
 const env = envSchema.parse(process.env);

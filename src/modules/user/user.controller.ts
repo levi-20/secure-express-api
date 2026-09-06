@@ -1,10 +1,11 @@
 import type { NextFunction, Request, Response } from "express";
 
 import { autheticateUser, registerUser } from "./user.service.js";
-import { createCsrfToken, createUserSession, getSessionById, logoutSession } from "@/auth/session.service.js";
+import { createCsrfToken, createUserSession, logoutSession } from "@/auth/session.service.js";
 import config from "@/config.js";
 import { AppError, ErrorCode } from "@/app-error.js";
 import { getUserById } from "./user.repository.js";
+import { signAccessToken } from "@/auth/token.service.js";
 
 
 export const getUserController = (_req: Request, res: Response, next: NextFunction) => {
@@ -101,6 +102,9 @@ export const getCsrfTokenController = async (req: Request, res: Response, next: 
       return next(new AppError(401, ErrorCode.UNAUTHENTICATED, "Session expired"))
     }
 
+    if (!req.auth?.sessionId)
+      return next(new AppError(401, ErrorCode.UNAUTHENTICATED, "Invalid or missing authentication credentials."))
+
     const csrfToken = createCsrfToken(req.auth!.sessionId);
 
     res.cookie("csrf", csrfToken, {
@@ -122,6 +126,9 @@ export const getCsrfTokenController = async (req: Request, res: Response, next: 
 export const logoutController = async (req: Request, res: Response, next: NextFunction) => {
 
   try {
+    if (!req.auth || !req.auth.sessionId)
+      return next(new AppError(401, ErrorCode.UNAUTHENTICATED, "Authentication required."))
+    
     await logoutSession(req.auth!.sessionId)
 
     res.clearCookie("sid", {
@@ -142,5 +149,21 @@ export const logoutController = async (req: Request, res: Response, next: NextFu
 
   } catch (err) {
     return next(err)
+  }
+}
+
+export const getAccessTokenController = async (req: Request, res: Response, next: NextFunction) => {
+
+  try {
+    const { email, password } = req.body;
+    const user = await autheticateUser({ email, password })
+
+    const token = await signAccessToken(user.id)
+    console.log("token", token)
+
+    res.status(200).json(token)
+
+  } catch (err) {
+    next(err)
   }
 }

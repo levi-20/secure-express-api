@@ -1,3 +1,4 @@
+import { en } from "zod/locales";
 import env from "./env.js"
 
 export type Environment =
@@ -20,7 +21,9 @@ type AppConfig = {
   },
   auth: {
     sessionTTL: number,
-    csrf: string
+    csrf: string,
+    jwtSecret: string,
+    jwtTTL: number
   }
 }
 
@@ -29,6 +32,8 @@ const config: AppConfig = {
   auth: {
     sessionTTL: env.SESSION_TTL_DAYS * 24 * 60 * 60 * 1_000,
     csrf: env.CSRF_SECRET,
+    jwtSecret: env.JWT_SECRET,
+    jwtTTL: env.JWT_TTL_MINUTES * 60
   },
   environment: env.NODE_ENV as Environment,
   database: {

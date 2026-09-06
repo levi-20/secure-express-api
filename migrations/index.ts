@@ -7,6 +7,8 @@ import config from '../src/config/config'
 
 const executeMigrations = async () => {
 
+  console.log("Starting migrations")
+
   const client = new Client({
     connectionString: config.database.url
   });
@@ -20,6 +22,8 @@ const executeMigrations = async () => {
     await migrate(db, {
       migrationsFolder: path.join(import.meta.dirname, "./db")
     })
+    console.log("Finished migrations")
+
   }
   finally {
 
