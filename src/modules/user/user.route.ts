@@ -1,11 +1,11 @@
-import { Router } from 'express'
 import { Ajv } from 'ajv';
 import ajvErrors from "ajv-errors";
+import { Router } from 'express'
 
-import { createUserController, getAccessTokenController, getCsrfTokenController, getCurrentUserConntroller, getUserController, loginUserController, logoutController } from './user.controller.js';
+import { createUserController, getAccessTokenController, getCsrfTokenController, getCurrentUserConntroller, getUserController, loginUserController, logoutController, refreshTokenController } from './user.controller.js';
 import { createUserSchema, loginUserSchema } from '@/schema/user.js';
 import { validateRequestBody } from '@/schema-validator.meddleware.js';
-import { authenticate, authenticateToken } from '@/auth.middleware.js';
+import { authenticateCookeiMiddleware, authenticateJwtTokenMiddleware, authenticateRefreshTokenMiddleware } from '@/auth.middleware.js';
 import { verifyCsrf } from '@/csrf.middleware.js';
 
 const ajv = new Ajv({ allErrors: true });
@@ -18,13 +18,14 @@ const validateLogin = ajv.compile(loginUserSchema)
 
 export const userRouter: Router = Router();
 
-userRouter.get('/me', authenticate, getCurrentUserConntroller)
-userRouter.get('/csrf', authenticate, getCsrfTokenController)
+userRouter.get('/me', authenticateCookeiMiddleware, getCurrentUserConntroller)
+userRouter.get('/csrf', authenticateCookeiMiddleware, getCsrfTokenController)
 
 userRouter.post('/login', validateRequestBody(validateLogin), loginUserController)
-userRouter.post('/logout', authenticate, verifyCsrf, logoutController)
+userRouter.post('/logout', authenticateCookeiMiddleware, verifyCsrf, logoutController)
 userRouter.post('/register', validateRequestBody(validateNewUser), createUserController)
 userRouter.post('/token', validateRequestBody(validateLogin), getAccessTokenController)
-userRouter.post('/self', authenticateToken, getCurrentUserConntroller)
+userRouter.post('/refresh', authenticateRefreshTokenMiddleware, refreshTokenController)
+userRouter.post('/self', authenticateJwtTokenMiddleware, getCurrentUserConntroller)
 
-userRouter.get('/users/:email', authenticate, getUserController)
+userRouter.get('/users/:email', authenticateCookeiMiddleware, getUserController)

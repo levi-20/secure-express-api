@@ -1,4 +1,3 @@
-import { en } from "zod/locales";
 import env from "./env.js"
 
 export type Environment =
@@ -23,7 +22,8 @@ type AppConfig = {
     sessionTTL: number,
     csrf: string,
     jwtSecret: string,
-    jwtTTL: number
+    jwtTTL: number,
+    refreshTTL: number
   }
 }
 
@@ -33,7 +33,8 @@ const config: AppConfig = {
     sessionTTL: env.SESSION_TTL_DAYS * 24 * 60 * 60 * 1_000,
     csrf: env.CSRF_SECRET,
     jwtSecret: env.JWT_SECRET,
-    jwtTTL: env.JWT_TTL_MINUTES * 60
+    jwtTTL: env.JWT_TTL_MINUTES * 60,
+    refreshTTL: env.JWT_REFRESH_TTL_MINUTES * 60 * 1_000
   },
   environment: env.NODE_ENV as Environment,
   database: {

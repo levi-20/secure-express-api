@@ -1,11 +1,10 @@
+import { Auth, RefreshAuth } from "./types.ts";
+
 declare global {
   namespace Express {
     interface Request {
-      auth?: {
-        userId: string;
-        expiresAt: Date;
-        sessionId?: string;
-      };
+      auth?: Auth,
+      refreshAuth?: RefreshAuth
     }
   }
 }

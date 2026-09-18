@@ -27,7 +27,9 @@ const envSchema = z.object({
   JWT_TTL_MINUTES: z.coerce.number().int().positive().max(60).default(5),
 
   JWT_SECRET: z.coerce.string().length(128),
-  
+
+  JWT_REFRESH_TTL_MINUTES: z.coerce.number().positive().min(30).max(90).default(30)
+
 });
 
 const env = envSchema.parse(process.env);

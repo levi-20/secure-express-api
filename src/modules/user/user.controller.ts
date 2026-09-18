@@ -5,7 +5,7 @@ import { createCsrfToken, createUserSession, logoutSession } from "@/auth/sessio
 import config from "@/config.js";
 import { AppError, ErrorCode } from "@/app-error.js";
 import { getUserById } from "./user.repository.js";
-import { signAccessToken } from "@/auth/token.service.js";
+import { signAccessToken, signJwtWithRefreshToken } from "@/auth/token.service.js";
 
 
 export const getUserController = (_req: Request, res: Response, next: NextFunction) => {
@@ -128,7 +128,7 @@ export const logoutController = async (req: Request, res: Response, next: NextFu
   try {
     if (!req.auth || !req.auth.sessionId)
       return next(new AppError(401, ErrorCode.UNAUTHENTICATED, "Authentication required."))
-    
+
     await logoutSession(req.auth!.sessionId)
 
     res.clearCookie("sid", {
@@ -164,6 +164,21 @@ export const getAccessTokenController = async (req: Request, res: Response, next
     res.status(200).json(token)
 
   } catch (err) {
-    next(err)
+    return next(err)
+  }
+}
+
+export const refreshTokenController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+
+    if (!req.refreshAuth) {
+      return next(new AppError(401, ErrorCode.UNAUTHENTICATED, "Authentication required."))
+    }
+
+    const rotatedRes = await signJwtWithRefreshToken(req.refreshAuth)
+    res.status(200).json(rotatedRes)
+
+  } catch (err) {
+    return next(err)
   }
 }
