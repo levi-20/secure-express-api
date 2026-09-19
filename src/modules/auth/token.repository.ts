@@ -1,4 +1,4 @@
-import { and, eq, isNull } from "drizzle-orm"
+import { and, eq, isNull, lte } from "drizzle-orm"
 
 import { db } from "@/db/client.js"
 import { RefreshToken } from "@/db/refresh-tokens.js"
@@ -54,7 +54,18 @@ export const revokeAndRotateRefreshToken = async (tokenHashToRevoke: string, new
 }
 
 export const revokeFamily = async (familyId: string) => {
+
   await db.update(RefreshToken)
     .set({ revokedAt: new Date() })
     .where(eq(RefreshToken.familyId, familyId))
+}
+
+export const cleanExpiredTokens = async () => {
+
+  const result = await db.delete(RefreshToken)
+    .where(
+      lte(RefreshToken.expiresAt, new Date())
+    );
+
+  return result.rowCount
 }

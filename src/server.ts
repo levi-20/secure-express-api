@@ -1,23 +1,30 @@
 import config from '@/config.js';
 import app from "./app.js";
 import { pool } from './infra/db/client.js';
+import { initializeCronJobs, shutdownCronJobs } from '@/cron/cron.js';
 
 
 const server = app.listen(config.server.port, () => {
-  console.log(`Server running on port ${config.server.port}`);
+
+  console.log(`[Server] Server running on port ${config.server.port}...`);
+
+  initializeCronJobs()
 });
 
 const shutdown = async (signal: string) => {
-  
-  console.log(`${signal} signal recieved, Shutting down....`)
+
+  console.log(`🛑 [Server] "${signal}" signal recieved, Shutting down...`)
+
+  await shutdownCronJobs(signal);
 
   server.close(async () => {
+
     await pool.end()
-    console.log("db pool closed")
+    console.log("🛑 [Server] Closed db pool!")
+
+    console.log(`🛑 [Server] Shutdown complete!`)
     process.exit(0)
   })
-
-  console.log("Shutdown complete!")
 }
 
 process.on("SIGTERM", () => shutdown("SIGTERM"))

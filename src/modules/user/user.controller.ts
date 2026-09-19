@@ -157,9 +157,7 @@ export const getAccessTokenController = async (req: Request, res: Response, next
   try {
     const { email, password } = req.body;
     const user = await autheticateUser({ email, password })
-
     const token = await signAccessToken(user.id)
-    console.log("token", token)
 
     res.status(200).json(token)
 

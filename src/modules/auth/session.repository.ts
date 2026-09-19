@@ -1,4 +1,4 @@
-import { and, eq, gt, isNotNull, isNull } from "drizzle-orm";
+import { and, eq, gt, isNotNull, isNull, lte } from "drizzle-orm";
 
 import { db } from '@/db/client.js'
 import { AuthSession } from '@/db/auth-sessions.js'
@@ -43,4 +43,15 @@ export const revokeSessionById = async (sessionId: string) => {
     ).returning({ id: AuthSession.id })
 
   return session;
+}
+
+
+export const cleanExpiredSessions = async () => {
+
+  const result = await db.delete(AuthSession)
+    .where(
+      lte(AuthSession.expiresAt, new Date())
+    )
+
+  return result.rowCount
 }
