@@ -12,7 +12,7 @@ export const validateRequestBody = (validate: ValidateFunction): RequestHandler 
       return next(new AppError(400, ErrorCode.INVALID_REQUEST, "Request body validation failed.", validate.errors))
     }
 
-    // calls the next funtion (middleware / controller ) in the chain
+    // calls the next function (middleware / controller ) in the chain
     return next();
   }
 }

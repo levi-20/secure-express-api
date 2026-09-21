@@ -3,7 +3,7 @@ import { cleanExpiredTokens } from "@/auth/token.repository.js";
 
 export const tokenCleanupJob = async () => {
 
-  console.info("[ExpiredTokens] Staring expired token cleanup");
+  console.info("[ExpiredTokens] Starting expired token cleanup");
 
   try {
     const rowsAffected = await cleanExpiredTokens();
@@ -17,7 +17,7 @@ export const tokenCleanupJob = async () => {
 
 export const sessionCleanupJob = async () => {
 
-  console.info("[ExpiredSessions] Staring expired session cleanup");
+  console.info("[ExpiredSessions] Starting expired session cleanup");
 
   try {
     const rowsAffected = await cleanExpiredSessions();

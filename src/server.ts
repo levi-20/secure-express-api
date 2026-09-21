@@ -13,7 +13,7 @@ const server = app.listen(config.server.port, () => {
 
 const shutdown = async (signal: string) => {
 
-  console.log(`🛑 [Server] "${signal}" signal recieved, Shutting down...`)
+  console.log(`🛑 [Server] "${signal}" signal received, Shutting down...`)
 
   await shutdownCronJobs(signal);
 

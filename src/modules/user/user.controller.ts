@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 
-import { autheticateUser, registerUser } from "./user.service.js";
+import { authenticateUser, registerUser } from "./user.service.js";
 import { createCsrfToken, createUserSession, logoutSession } from "@/auth/session.service.js";
 import config from "@/config.js";
 import { AppError, ErrorCode } from "@/app-error.js";
@@ -44,7 +44,7 @@ export const loginUserController = async (req: Request, res: Response, next: Nex
 
   try {
     const { email, password } = req.body
-    const user = await autheticateUser({ email, password })
+    const user = await authenticateUser({ email, password })
     const { sessionId, token, expiresAt } = await createUserSession(user.id);
 
     res.cookie("sid", token, {
@@ -75,7 +75,7 @@ export const loginUserController = async (req: Request, res: Response, next: Nex
   }
 }
 
-export const getCurrentUserConntroller = async (req: Request, res: Response, next: NextFunction) => {
+export const getCurrentUserController = async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     if (!req.auth) return next(new AppError(401, ErrorCode.UNAUTHENTICATED, "Authentication required."));
@@ -156,7 +156,7 @@ export const getAccessTokenController = async (req: Request, res: Response, next
 
   try {
     const { email, password } = req.body;
-    const user = await autheticateUser({ email, password })
+    const user = await authenticateUser({ email, password })
     const token = await signAccessToken(user.id)
 
     res.status(200).json(token)

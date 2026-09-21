@@ -22,15 +22,15 @@ export const registerUser = async ({ email, password }: RegisterUserInput) => {
   return user
 }
 
-export const autheticateUser = async ({ email, password }: LoginUserInput) => {
+export const authenticateUser = async ({ email, password }: LoginUserInput) => {
 
   const user = await getUserByEmail(email);
   if (!user) {
-    throw new AppError(401, ErrorCode.EMAIL_ALREADY_EXISTS, "Invaid email or password")
+    throw new AppError(401, ErrorCode.EMAIL_ALREADY_EXISTS, "Invalid email or password")
   }
 
   if (!await argon2.verify(user.passwordHash, password)) {
-    throw new AppError(401, ErrorCode.EMAIL_ALREADY_EXISTS, "Invaid email or password")
+    throw new AppError(401, ErrorCode.EMAIL_ALREADY_EXISTS, "Invalid email or password")
   }
 
   return user

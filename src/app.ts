@@ -22,7 +22,7 @@ app.use(userRouter)
 // For 404 routes
 app.use(notFoundMiddleware);
 
-// Error hander
+// Error handler
 app.use(errorHandlerMiddleware);
 
 export default app;

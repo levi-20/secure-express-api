@@ -42,9 +42,9 @@ export const verifyCsrfToken = (sessionId: string, csrfToken: string): boolean =
 
   const expectedSignature = createHmac("sha256", config.auth.csrf).update(`${sessionId}.${random}`).digest("base64url");
   const expected = Buffer.from(expectedSignature)
-  const orignal = Buffer.from(signature)
+  const original = Buffer.from(signature)
 
-  return signature?.length === expectedSignature.length && timingSafeEqual(expected, orignal)
+  return signature?.length === expectedSignature.length && timingSafeEqual(expected, original)
 }
 
 export const logoutSession = async (sessionId: string) => {
